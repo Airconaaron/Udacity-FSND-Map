@@ -2,14 +2,14 @@
 
 This web app aims to find the most popular Vegan restaurants in Singapore and display them as a single page app. 
 
+It Uses:
+* Google Maps
+* FourSquare
+* JQuery
+* KnockOutjs
 
 # Installation
-```
-    npm init
-```
-```
-    npm install yelp-api-v3 --save
-```
+
 
 # Demo 
 Here is a [link]() to a demo.
