@@ -19,17 +19,35 @@ var foursquare_search_url = "https://api.foursquare.com/v2/venues/search";
 var restaurant_detail_url = "https://api.foursquare.com/v2/venues/";
 
 function initMap() {
+    var pinColor1 = "ed2939";
+    var pinColor2 = "FFF";
+    var pinImage1 = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor1,
+        new google.maps.Size(21, 34),
+        new google.maps.Point(0,0),
+        new google.maps.Point(10, 34));
+    var pinImage2 = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor2,
+        new google.maps.Size(21, 34),
+        new google.maps.Point(0,0),
+        new google.maps.Point(10, 34));
     map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 1.30, lng: 103.84},
       zoom: 12
     });
     restaurantsdummy.forEach(function(datum) {
         var newMarker = new google.maps.Marker({
-            position: {lat: datum.lat,lng:datum.lng},//{datum['lat'], datum['lng']},
+            position: {lat: datum.lat,lng:datum.lng},
+            icon: pinImage1,
             map: map,
             animation: google.maps.Animation.Drop,
             title: datum.name
         });
+        function toggleBounce() {
+            if (newMarker.getAnimation() !== null) {
+                newMarker.setAnimation(null);
+            } else {
+                newMarker.setAnimation(google.maps.Animation.BOUNCE);
+            }
+        }
         datum.marker = newMarker;
         var contentStr = "";
         // retrieves content for our info window
@@ -58,7 +76,14 @@ function initMap() {
                     });
                     newMarker.addListener('click', function(){
                         newInfo.open(map,newMarker);
+                        toggleBounce();
                         map.panTo(newMarker.getPosition());
+                    });
+                    newMarker.addListener('mouseover', function() {
+                        newMarker.setIcon(pinImage2);
+                    });
+                    newMarker.addListener('mouseout', function() {
+                        newMarker.setIcon(pinImage1);
                     });
                 },
                 error: function(e) {
@@ -82,6 +107,12 @@ var ViewModel = function() {
     self.filtertext = ko.observable("");
     self.showItem = function (data) {
         google.maps.event.trigger(data.marker, 'click');
+    };
+    self.mouseOver = function(data) {
+        google.maps.event.trigger(data.marker, 'mouseover');
+    };
+    self.mouseOut = function(data) {
+        google.maps.event.trigger(data.marker, 'mouseout');
     };
     // store all restaurants here
     self.restaurants = ko.observableArray(restaurantsdummy);

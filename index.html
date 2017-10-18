@@ -14,7 +14,7 @@
         <h3 class="text-center">Vegan Place 🇸🇬</h3>
         <input type="text" class="form-control" placeholder="Find restaurants ..." data-bind="textInput: filtertext">
         <div class="list-group" data-bind="foreach: restaurantsFilter">
-          <button type="button" class="list-group-item" data-bind="visible: visible, text: name, click: $parent.showItem"></button>
+          <button type="button" class="list-group-item" data-bind="visible: visible, text: name, click: $parent.showItem, event: {mouseover: $parent.mouseOver, mouseout: $parent.mouseOut}"></button>
         </div>
       </div>
       <div class="col-xs-12 col-sm-9">
