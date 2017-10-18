@@ -1,6 +1,6 @@
 var map;
 // default restaurants
-var restaurantsdummy = [      
+var RESTAURANTS_DUMMY = [      
     {id: "52d0b63811d2fd7c68dde58d", name: "Loving Hut", visible: true, lat: 1.3111, lng: 103.9011, marker: null},
     {id: "5040b096e4b053a531156a51", name: "Eight Treasures Vegan", visible: true, lat: 1.2871636946078702, lng: 103.8478677916091, marker: null},
     {id: "4c88c4130f3c236a5422f55c", name: "VeganBurg", visible: true, lat: 1.3209101273283017, lng: 103.9051775284811, marker: null},
@@ -33,7 +33,7 @@ function initMap() {
       center: {lat: 1.30, lng: 103.84},
       zoom: 12
     });
-    restaurantsdummy.forEach(function(datum) {
+    RESTAURANTS_DUMMY.forEach(function(datum) {
         var newMarker = new google.maps.Marker({
             position: {lat: datum.lat,lng:datum.lng},
             icon: pinImage1,
@@ -41,12 +41,9 @@ function initMap() {
             animation: google.maps.Animation.Drop,
             title: datum.name
         });
-        function toggleBounce() {
-            if (newMarker.getAnimation() !== null) {
-                newMarker.setAnimation(null);
-            } else {
-                newMarker.setAnimation(google.maps.Animation.BOUNCE);
-            }
+        function bounceOnce() {
+            newMarker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(function(){ newMarker.setAnimation(null); }, 750);
         }
         datum.marker = newMarker;
         var contentStr = "";
@@ -76,7 +73,7 @@ function initMap() {
                     });
                     newMarker.addListener('click', function(){
                         newInfo.open(map,newMarker);
-                        toggleBounce();
+                        bounceOnce();
                         map.panTo(newMarker.getPosition());
                     });
                     newMarker.addListener('mouseover', function() {
@@ -107,6 +104,7 @@ var ViewModel = function() {
     self.filtertext = ko.observable("");
     self.showItem = function (data) {
         google.maps.event.trigger(data.marker, 'click');
+        //data.marker.toggleBounce();
     };
     self.mouseOver = function(data) {
         google.maps.event.trigger(data.marker, 'mouseover');
@@ -115,13 +113,14 @@ var ViewModel = function() {
         google.maps.event.trigger(data.marker, 'mouseout');
     };
     // store all restaurants here
-    self.restaurants = ko.observableArray(restaurantsdummy);
+    self.restaurants = ko.observableArray(RESTAURANTS_DUMMY);
     self.restaurantsFilter = ko.computed(function() {
         var myfilter = self.filtertext().toLowerCase();
         if (myfilter.length > 0) {
             // then actually do something cuz theres a word
             return ko.utils.arrayFilter(self.restaurants(), function(item) {
                 item.visible = item.name.toLowerCase().includes(myfilter);
+                item.marker.setVisible(item.visible);
                 return item.visible;
             });
         }
@@ -129,6 +128,7 @@ var ViewModel = function() {
             // thingie is empty
             self.restaurants().forEach(function(datum){
                 datum.visible = true;
+                datum.marker.setVisible(true);
             });
             return self.restaurants();
         }
