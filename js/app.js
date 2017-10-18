@@ -46,9 +46,9 @@ function initMap() {
                     place = data.response.venue;
                     var pref = "img/";
                     var suff = "/dumbcat.jpg";
-                    if (place.bestPhoto != undefined) {
+                    if (place.bestPhoto !==  undefined) {
                         pref = place.bestPhoto.prefix;
-                        suff = place.bestPhoto.suffix
+                        suff = place.bestPhoto.suffix;
                     }
                     contentStr = "<h2>" + datum.name + "</h2>" + 
                                 "<p> Price: " + place.price.message+ "</p>" +
@@ -58,7 +58,7 @@ function initMap() {
                     });
                     newMarker.addListener('click', function(){
                         newInfo.open(map,newMarker);
-                        map.panTo(newMarker.getPosition())
+                        map.panTo(newMarker.getPosition());
                     });
                 },
                 error: function(e) {
@@ -79,10 +79,10 @@ function mapsError() {
 
 var ViewModel = function() {
     var self = this;
-    self.filtertext = ko.observable("")
+    self.filtertext = ko.observable("");
     self.showItem = function (data) {
         google.maps.event.trigger(data.marker, 'click');
-    }
+    };
     // store all restaurants here
     self.restaurants = ko.observableArray(restaurantsdummy);
     self.restaurantsFilter = ko.computed(function() {
@@ -102,4 +102,4 @@ var ViewModel = function() {
             return self.restaurants();
         }
     }, self);
-}
+};
