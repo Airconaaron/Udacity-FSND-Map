@@ -1,0 +1,21 @@
+html, body {
+  height: 100%;
+}
+
+.container-full {
+  margin: 0 auto;
+  width: 100%;
+}
+
+h3 {
+  margin-top: 10px;
+}
+
+#map {
+  min-height: 300px;
+  height: 100vh;
+}
+
+.search-input {
+  width: 100%;
+}
